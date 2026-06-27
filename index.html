@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmyloidDx — Диагностическая панель маркеров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #04060f;
+  --bg-2:     #070b18;
+  --bg-card:  #0b1122;
+  --bg-card2: #0e1630;
+  --cyan:     #00c8ff;
+  --cyan-10:  rgba(0,200,255,.10);
+  --cyan-05:  rgba(0,200,255,.05);
+  --cyan-20:  rgba(0,200,255,.20);
+  --purple:   #7b61ff;
+  --purple-10:rgba(123,97,255,.10);
+  --gold:     #e8b86d;
+  --t1:       #eaf0fa;
+  --t2:       #7d8faa;
+  --t3:       #3d506e;
+  --border:   rgba(255,255,255,.06);
+  --border-c: rgba(0,200,255,.18);
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--t1);
+  font-family:'Sora',sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* ─── CANVAS ─── */
+#bg-canvas{
+  position:fixed;top:0;left:0;
+  width:100%;height:100%;
+  z-index:0;pointer-events:none;
+  opacity:.45;
+}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  padding:1.4rem 5vw;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s,backdrop-filter .4s;
+}
+nav.scrolled{
+  background:rgba(4,6,15,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Cormorant',serif;
+  font-size:1.05rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--cyan);
+  display:flex;align-items:center;gap:.6rem;
+}
+.nav-logo-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--cyan);
+  animation:blink 2s ease infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.nav-links{display:flex;gap:2.4rem;list-style:none}
+.nav-links a{
+  color:var(--t2);text-decoration:none;
+  font-size:.75rem;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;
+  transition:color .25s;
+}
+.nav-links a:hover{color:var(--cyan)}
+
+/* ─── SECTION BASICS ─── */
+section{position:relative;z-index:1}
+.inner{max-width:1200px;margin:0 auto;padding:0 5vw}
+
+.label{
+  display:flex;align-items:center;gap:.8rem;
+  font-size:.67rem;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--cyan);
+  margin-bottom:1rem;
+}
+.label::before{
+  content:'';display:block;
+  width:2rem;height:1px;background:var(--cyan);
+}
+h2{
+  font-family:'Cormorant',serif;
+  font-size:clamp(1.9rem,3.5vw,3rem);
+  font-weight:600;line-height:1.12;
+  letter-spacing:-.01em;
+  margin-bottom:1.4rem;
+}
+
+/* ─── HERO ─── */
+#hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;
+  padding:8rem 5vw 4rem;
+  gap:4rem;
+}
+.hero-left{max-width:580px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.55rem;
+  padding:.35rem 1rem;
+  border:1px solid var(--border-c);border-radius:2rem;
+  font-size:.68rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--cyan);
+  background:var(--cyan-05);margin-bottom:2.2rem;
+  animation:fadeUp .9s ease both;
+}
+.hero-badge-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--cyan);animation:blink 2s ease infinite;
+}
+h1{
+  font-family:'Cormorant',serif;
+  font-size:clamp(2.6rem,5.5vw,5rem);
+  font-weight:600;line-height:1.06;
+  letter-spacing:-.015em;
+  margin-bottom:1.2rem;
+  animation:fadeUp .9s .15s ease both;
+}
+h1 em{color:var(--cyan);font-style:italic}
+.hero-sub{
+  font-size:1rem;font-weight:300;color:var(--t2);
+  max-width:480px;margin-bottom:3rem;line-height:1.75;
+  animation:fadeUp .9s .3s ease both;
+}
+.hero-stats{
+  display:flex;gap:3.5rem;
+  animation:fadeUp .9s .45s ease both;
+}
+.stat-val{
+  font-family:'Cormorant',serif;
+  font-size:3rem;font-weight:600;line-height:1;
+}
+.stat-val sup{color:var(--cyan);font-size:1.6rem;vertical-align:super}
+.stat-lbl{
+  font-size:.68rem;font-weight:500;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--t3);max-width:110px;
+  margin-top:.3rem;line-height:1.4;
+}
+
+/* ─── HERO RIGHT — SVG CELL ─── */
+.hero-right{
+  display:flex;align-items:center;justify-content:center;
+  animation:fadeIn 1.2s .5s ease both;
+}
+.cell-wrap{
+  position:relative;
+  width:min(380px,40vw);
+  aspect-ratio:1;
+}
+.cell-wrap svg{width:100%;height:100%}
+
+/* ─── ABOUT ─── */
+#about{padding:8rem 0}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6rem;align-items:center;
+}
+.about-body p{
+  color:var(--t2);margin-bottom:1.4rem;
+  font-size:.95rem;line-height:1.82;
+}
+.cards-col{display:flex;flex-direction:column;gap:1.2rem}
+.hcard{
+  padding:1.4rem 1.6rem;
+  border:1px solid var(--border);
+  border-left:3px solid var(--cyan);
+  background:var(--bg-card);
+  border-radius:0 8px 8px 0;
+  transition:transform .3s,border-left-color .3s,background .3s;
+}
+.hcard:hover{
+  transform:translateX(5px);
+  border-left-color:var(--purple);
+  background:var(--bg-card2);
+}
+.hcard h4{
+  font-family:'Cormorant',serif;
+  font-size:1.12rem;font-weight:600;
+  margin-bottom:.3rem;
+}
+.hcard p{font-size:.82rem;color:var(--t2);line-height:1.6}
+
+/* ─── MARKERS ─── */
+#markers{
+  padding:8rem 0;
+  background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(0,200,255,.03) 0%,transparent 70%);
+}
+.markers-head{text-align:center;margin-bottom:3.5rem}
+.markers-head h2{margin:0 auto .8rem}
+.markers-head p{color:var(--t2);max-width:500px;margin:0 auto;font-size:.9rem}
+.markers-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.4rem;
+}
+.mcard{
+  position:relative;padding:2rem;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:transform .35s,border-color .35s,box-shadow .35s;
+}
+.mcard::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at top left,var(--cyan-05),transparent 65%);
+  opacity:0;transition:opacity .35s;
+}
+.mcard:hover{
+  transform:translateY(-5px);
+  border-color:var(--border-c);
+  box-shadow:0 24px 60px rgba(0,200,255,.07);
+}
+.mcard:hover::before{opacity:1}
+.mcard-idx{
+  position:absolute;top:1.2rem;right:1.4rem;
+  font-family:'Cormorant',serif;
+  font-size:3.5rem;font-weight:300;line-height:1;
+  color:rgba(255,255,255,.04);
+  transition:color .35s;
+  user-select:none;
+}
+.mcard:hover .mcard-idx{color:rgba(0,200,255,.07)}
+.mcard-tag{
+  display:inline-block;
+  padding:.22rem .65rem;
+  background:var(--cyan-05);
+  border:1px solid rgba(0,200,255,.14);
+  border-radius:4px;
+  font-size:.6rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:1.1rem;
+}
+.mcard-name{
+  font-family:'Cormorant',serif;
+  font-size:1.65rem;font-weight:600;line-height:1.15;
+  margin-bottom:.2rem;
+}
+.mcard-fname{
+  font-size:.75rem;color:var(--t3);
+  font-style:italic;margin-bottom:.9rem;
+}
+.mcard-desc{font-size:.82rem;color:var(--t2);line-height:1.65}
+.mcard-bar{
+  margin-top:1.2rem;height:2px;
+  background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;
+}
+.mcard-fill{
+  height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .9s cubic-bezier(.16,1,.3,1);
+}
+.mcard-fill.on{transform:scaleX(1)}
+
+/* ─── METHODOLOGY ─── */
+#methodology{padding:8rem 0}
+.method-wrap{margin-top:4rem;position:relative}
+.method-wrap::before{
+  content:'';position:absolute;
+  left:2.4rem;top:2.5rem;bottom:2.5rem;
+  width:1px;
+  background:linear-gradient(to bottom,transparent,var(--border-c) 20%,var(--border-c) 80%,transparent);
+}
+.mstep{
+  display:grid;grid-template-columns:5rem 1fr;
+  gap:2.5rem;padding:2.5rem 0;
+  border-bottom:1px solid var(--border);
+  transition:padding-left .3s;
+}
+.mstep:last-child{border-bottom:none}
+.mstep:hover{padding-left:.5rem}
+.step-num{
+  width:3rem;height:3rem;
+  border:1px solid var(--border-c);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:600;letter-spacing:.05em;
+  color:var(--cyan);background:var(--bg-card);
+  position:relative;z-index:1;margin:0 auto;
+  transition:background .3s,box-shadow .3s,color .3s;
+}
+.mstep:hover .step-num{
+  background:var(--cyan);color:var(--bg);
+  box-shadow:0 0 22px rgba(0,200,255,.4);
+}
+.step-body h3{
+  font-family:'Cormorant',serif;
+  font-size:1.45rem;font-weight:600;
+  margin-bottom:.6rem;
+}
+.step-body p{
+  font-size:.87rem;color:var(--t2);
+  line-height:1.78;max-width:620px;
+}
+
+/* ─── RESULTS ─── */
+#results{
+  padding:8rem 0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(123,97,255,.04) 0%,transparent 70%);
+}
+.results-head{text-align:center;margin-bottom:3.5rem}
+.rg{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1.5rem;
+}
+.rcard{
+  padding:2.2rem 2.4rem;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  position:relative;overflow:hidden;
+  transition:transform .3s,border-color .3s;
+}
+.rcard::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s cubic-bezier(.16,1,.3,1);
+}
+.rcard:hover{transform:translateY(-3px);border-color:rgba(123,97,255,.2)}
+.rcard:hover::after{transform:scaleX(1)}
+.rcard-icon{
+  width:2.6rem;height:2.6rem;
+  margin-bottom:1.4rem;color:var(--cyan);
+  stroke-width:1.4;
+}
+.rcard h3{
+  font-family:'Cormorant',serif;
+  font-size:1.35rem;font-weight:600;
+  margin-bottom:.7rem;
+}
+.rcard p{font-size:.84rem;color:var(--t2);line-height:1.72}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);
+  background:var(--bg-2);
+  padding:3.5rem 5vw 2rem;
+}
+.foot-main{
+  display:grid;grid-template-columns:1fr 1.4fr 1fr;
+  gap:3.5rem;max-width:1200px;margin:0 auto;
+  padding-bottom:2.5rem;
+  border-bottom:1px solid var(--border);
+}
+.ft{font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t3);margin-bottom:1rem}
+.fcname{
+  font-family:'Cormorant',serif;
+  font-size:1.05rem;font-weight:600;
+  line-height:1.35;margin-bottom:.9rem;
+}
+.fdets{font-size:.78rem;color:var(--t2);line-height:1.85}
+.fdets strong{color:var(--t3);font-weight:500}
+.ftxt{font-size:.8rem;color:var(--t2);line-height:1.72;margin-bottom:1.6rem}
+.flogos{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+.flogo{
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:8px;padding:.75rem 1rem;
+  transition:border-color .3s,background .3s;
+}
+.flogo:hover{border-color:var(--border-c);background:var(--cyan-05)}
+.flogo img{height:44px;width:auto;object-fit:contain}
+.fcon{display:flex;flex-direction:column;gap:.7rem}
+.ci{display:flex;align-items:center;gap:.65rem;font-size:.83rem;color:var(--t2)}
+.ci svg{width:1.1rem;height:1.1rem;color:var(--t3);flex-shrink:0;stroke-width:1.5}
+.ci a{color:var(--cyan);text-decoration:none;transition:opacity .2s}
+.ci a:hover{opacity:.65}
+.foot-bot{
+  max-width:1200px;margin:1.8rem auto 0;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:.72rem;color:var(--t3);
+}
+
+/* ─── UTILS ─── */
+.fiu{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
+.fiu.on{opacity:1;transform:translateY(0)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.sep{width:1px;height:3.5rem;background:linear-gradient(to bottom,var(--border-c),transparent);margin:0 auto}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  #hero{grid-template-columns:1fr;padding:7rem 5vw 3rem}
+  .hero-right{display:none}
+  .about-grid,.rg{grid-template-columns:1fr}
+  .markers-grid{grid-template-columns:1fr 1fr}
+  .foot-main{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .markers-grid{grid-template-columns:1fr}
+  .hero-stats{gap:2rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- ══ NAV ══════════════════════════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    AmyloidDx
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">О проекте</a></li>
+    <li><a href="#markers">Маркеры</a></li>
+    <li><a href="#methodology">Методология</a></li>
+    <li><a href="#results">Результаты</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Инновационная диагностика
+    </div>
+
+    <h1>
+      Панель маркеров<br>
+      <em>амилоидогенных</em><br>
+      макрофагов
+    </h1>
+
+    <p class="hero-sub">
+      Комплексная диагностическая система для раннего выявления пациентов
+      с высоким риском развития амилоидоза на основе иммунофенотипирования клеток
+    </p>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-val">6<sup>+</sup></div>
+        <div class="stat-lbl">Диагностических маркеров</div>
+      </div>
+      <div>
+        <div class="stat-val">94<sup>%</sup></div>
+        <div class="stat-lbl">Чувствительность метода</div>
+      </div>
+      <div>
+        <div class="stat-val">3<sup>×</sup></div>
+        <div class="stat-lbl">Раньше клинических симптомов</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="cell-wrap">
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cellGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00c8ff" stop-opacity=".18"/>
+            <stop offset="100%" stop-color="#00c8ff" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="nucGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#7b61ff" stop-opacity=".35"/>
+            <stop offset="100%" stop-color="#7b61ff" stop-opacity=".05"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Outer glow -->
+        <circle cx="200" cy="200" r="175" fill="url(#cellGrad)"/>
+
+        <!-- Cell membrane -->
+        <ellipse cx="200" cy="200" rx="155" ry="145" stroke="#00c8ff" stroke-width="1.2" stroke-opacity=".35">
+          <animate attributeName="rx" values="155;162;155" dur="6s" repeatCount="indefinite"/>
+          <animate attributeName="ry" values="145;138;145" dur="6s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="200" cy="200" rx="155" ry="145" stroke="#00c8ff" stroke-width=".5" stroke-opacity=".12" stroke-dasharray="8 5">
+          <animate attributeName="rx" values="162;155;162" dur="6s" repeatCount="indefinite"/>
+          <animate attributeName="ry" values="138;145;138" dur="6s" repeatCount="indefinite"/>
+          <animateTransform attributeName="transform" type="rotate" from="0 200 200" to="360 200 200" dur="40s" repeatCount="indefinite"/>
+        </ellipse>
+
+        <!-- Nucleus -->
+        <ellipse cx="195" cy="198" rx="60" ry="55" fill="url(#nucGrad)" stroke="#7b61ff" stroke-width="1" stroke-opacity=".4">
+          <animate attributeName="rx" values="60;64;60" dur="5s" repeatCount="indefinite"/>
+          <animate attributeName="ry" values="55;51;55" dur="5s" repeatCount="indefinite"/>
+        </ellipse>
+
+        <!-- Organelles -->
+        <ellipse cx="280" cy="155" rx="20" ry="10" fill="none" stroke="#00c8ff" stroke-width=".9" stroke-opacity=".3" transform="rotate(-30 280 155)"/>
+        <ellipse cx="130" cy="265" rx="16" ry="8" fill="none" stroke="#00c8ff" stroke-width=".9" stroke-opacity=".25" transform="rotate(20 130 265)"/>
+        <ellipse cx="290" cy="260" rx="14" ry="7" fill="none" stroke="#00c8ff" stroke-width=".9" stroke-opacity=".22" transform="rotate(-50 290 260)"/>
+        <ellipse cx="115" cy="155" rx="18" ry="9" fill="none" stroke="#7b61ff" stroke-width=".9" stroke-opacity=".25" transform="rotate(40 115 155)"/>
+
+        <!-- Vesicles / granules -->
+        <circle cx="250" cy="200" r="8" fill="#00c8ff" fill-opacity=".08" stroke="#00c8ff" stroke-width=".7" stroke-opacity=".3"/>
+        <circle cx="155" cy="220" r="6" fill="#7b61ff" fill-opacity=".1" stroke="#7b61ff" stroke-width=".7" stroke-opacity=".3"/>
+        <circle cx="230" cy="260" r="5" fill="#00c8ff" fill-opacity=".07" stroke="#00c8ff" stroke-width=".7" stroke-opacity=".25"/>
+        <circle cx="165" cy="168" r="7" fill="#7b61ff" fill-opacity=".08" stroke="#7b61ff" stroke-width=".7" stroke-opacity=".25"/>
+        <circle cx="248" cy="148" r="4" fill="#00c8ff" fill-opacity=".1" stroke="#00c8ff" stroke-width=".7" stroke-opacity=".3"/>
+
+        <!-- Marker labels orbiting -->
+        <g filter="url(#glow)">
+          <text x="52" y="138" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD68</text>
+          <text x="310" y="120" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">SAA1</text>
+          <text x="315" y="295" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD163</text>
+          <text x="52" y="290" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD206</text>
+          <text x="155" y="375" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">IL-10</text>
+          <text x="200" y="42" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">TGF-β1</text>
+        </g>
+
+        <!-- Connecting lines from labels to cell -->
+        <line x1="100" y1="133" x2="143" y2="155" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="308" y1="118" x2="275" y2="148" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="313" y1="290" x2="283" y2="265" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="100" y1="283" x2="135" y2="265" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="185" y1="368" x2="185" y2="340" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="218" y1="48" x2="210" y2="62" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
+
+        <!-- Scan line effect -->
+        <rect x="50" y="0" width="300" height="400" fill="none">
+          <animate attributeName="y" values="-10;410;-10" dur="4s" repeatCount="indefinite"/>
+        </rect>
+        <line x1="45" y1="0" x2="355" y2="0" stroke="#00c8ff" stroke-width=".4" stroke-opacity=".12">
+          <animate attributeName="y1" values="-5;405;-5" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="y2" values="-5;405;-5" dur="4s" repeatCount="indefinite"/>
+        </line>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ ABOUT ══════════════════════════════════════════════════════════════ -->
+<section id="about">
+  <div class="inner">
+    <div class="about-grid">
+      <div class="about-body fiu">
+        <div class="label">О проекте</div>
+        <h2>Проблема амилоидоза и необходимость ранней диагностики</h2>
+        <p>
+          Амилоидоз — тяжёлое системное заболевание, при котором в органах и тканях
+          происходит патологическое отложение нерастворимых белковых агрегатов — амилоидных
+          фибрилл. Без ранней диагностики болезнь прогрессирует до необратимого поражения
+          почек, сердца, печени и нервной системы.
+        </p>
+        <p>
+          Ключевую роль в амилоидогенезе играют макрофаги — при определённых условиях они
+          приобретают особый фенотип, активно синтезируя и «упаковывая» амилоидные
+          предшественники. Идентификация таких клеток открывает возможность диагностики
+          за годы до появления клинических симптомов.
+        </p>
+        <p>
+          Разработанная нами панель маркеров позволяет с высокой точностью
+          идентифицировать амилоидогенные макрофаги в образцах периферической крови,
+          формируя основу для своевременного превентивного вмешательства.
+        </p>
+      </div>
+
+      <div class="cards-col fiu" style="transition-delay:.18s">
+        <div class="hcard">
+          <h4>Системное воспаление</h4>
+          <p>Хроническое воспаление активирует макрофаги особым образом, запуская каскад реакций, ведущих к амилоидогенезу</p>
+        </div>
+        <div class="hcard">
+          <h4>Иммунный дисбаланс</h4>
+          <p>Сдвиг поляризации макрофагов в сторону M2 фенотипа — критический ранний предиктор развития амилоидоза</p>
+        </div>
+        <div class="hcard">
+          <h4>Фенотипическая идентификация</h4>
+          <p>Комбинация поверхностных и внутриклеточных маркеров позволяет однозначно выделить амилоидогенный субтип клеток</p>
+        </div>
+        <div class="hcard">
+          <h4>Превентивное вмешательство</h4>
+          <p>Ранняя диагностика позволяет начать лечение до необратимых органных повреждений, существенно улучшая прогноз</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ MARKERS ══════════════════════════════════════════════════════════════ -->
+<section id="markers">
+  <div class="inner">
+    <div class="markers-head fiu">
+      <div class="label" style="justify-content:center">Диагностическая панель</div>
+      <h2>Маркеры амилоидогенных макрофагов</h2>
+      <p>Каждый маркер несёт независимую диагностическую информацию; их совокупный анализ обеспечивает высокую специфичность метода</p>
+    </div>
+
+    <div class="markers-grid">
+      <div class="mcard fiu" style="transition-delay:.0s">
+        <div class="mcard-idx">01</div>
+        <div class="mcard-tag">Поверхностный маркер</div>
+        <div class="mcard-name">CD68</div>
+        <div class="mcard-fname">Lysosomal/endosomal glycoprotein</div>
+        <p class="mcard-desc">Универсальный маркер мononuclear phagocytes. Высокая экспрессия CD68 подтверждает макрофагальную природу исследуемых клеток и служит отправной точкой панельного анализа.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="95"></div></div>
+      </div>
+
+      <div class="mcard fiu" style="transition-delay:.08s">
+        <div class="mcard-idx">02</div>
+        <div class="mcard-tag">Острофазовый белок</div>
+        <div class="mcard-name">SAA1</div>
+        <div class="mcard-fname">Serum Amyloid A1</div>
+        <p class="mcard-desc">Предшественник белка амилоидных фибрилл типа АА. Накопление SAA1 в макрофагах является ключевым звеном патогенеза реактивного амилоидоза.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="90"></div></div>
+      </div>
+
+      <div class="mcard fiu" style="transition-delay:.16s">
+        <div class="mcard-idx">03</div>
+        <div class="mcard-tag">Рецептор M2 фенотипа</div>
+        <div class="mcard-name">CD163</div>
+        <div class="mcard-fname">Scavenger receptor cysteine-rich</div>
+        <p class="mcard-desc">Маркер альтернативно активированных макрофагов. Гиперэкспрессия CD163 указывает на иммуносупрессивное микроокружение, благоприятствующее амилоидогенезу.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="82"></div></div>
+      </div>
+
+      <div class="mcard fiu" style="transition-delay:.12s">
+        <div class="mcard-idx">04</div>
+        <div class="mcard-tag">Эндоцитарный рецептор</div>
+        <div class="mcard-name">CD206</div>
+        <div class="mcard-fname">Mannose Receptor 1 (MRC1)</div>
+        <p class="mcard-desc">Маннозный рецептор тканевых макрофагов. В сочетании с CD163 определяет конкретный субтип амилоидогенных клеток с высокой точностью.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="75"></div></div>
+      </div>
+
+      <div class="mcard fiu" style="transition-delay:.20s">
+        <div class="mcard-idx">05</div>
+        <div class="mcard-tag">Цитокин регуляции</div>
+        <div class="mcard-name">IL-10</div>
+        <div class="mcard-fname">Interleukin-10</div>
+        <p class="mcard-desc">Ключевой противовоспалительный цитокин. Сочетание высокого IL-10 с провоспалительными маркерами указывает на дисрегуляцию иммунного ответа.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="68"></div></div>
+      </div>
+
+      <div class="mcard fiu" style="transition-delay:.28s">
+        <div class="mcard-idx">06</div>
+        <div class="mcard-tag">Профиброзный фактор</div>
+        <div class="mcard-name">TGF-β1</div>
+        <div class="mcard-fname">Transforming Growth Factor Beta 1</div>
+        <p class="mcard-desc">Секретируется амилоидогенными макрофагами. Стимулирует отложение амилоида в периваскулярных зонах и является предиктором органного поражения.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="71"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ METHODOLOGY ══════════════════════════════════════════════════════════ -->
+<section id="methodology">
+  <div class="inner">
+    <div class="fiu">
+      <div class="label">Протокол исследования</div>
+      <h2>Методология диагностики</h2>
+    </div>
+
+    <div class="method-wrap">
+      <div class="mstep fiu" style="transition-delay:.0s">
+        <div><div class="step-num">01</div></div>
+        <div class="step-body">
+          <h3>Забор биологического материала</h3>
+          <p>Исследование проводится на образцах периферической крови пациента. Выделение мононуклеарных клеток (МКПК) методом градиентного центрифугирования позволяет обогатить фракцию макрофагов и моноцитов для последующего анализа.</p>
+        </div>
+      </div>
+
+      <div class="mstep fiu" style="transition-delay:.1s">
+        <div><div class="step-num">02</div></div>
+        <div class="step-body">
+          <h3>Иммунофлуоресцентное окрашивание</h3>
+          <p>Клетки окрашиваются панелью конъюгированных антител, специфичных к маркерам CD68, SAA1, CD163, CD206, IL-10 и TGF-β1. Используются флуорохромы с разными спектрами эмиссии для мультиплексного анализа без спектрального перекрёстного влияния.</p>
+        </div>
+      </div>
+
+      <div class="mstep fiu" style="transition-delay:.2s">
+        <div><div class="step-num">03</div></div>
+        <div class="step-body">
+          <h3>Многоцветная проточная цитофлуориметрия</h3>
+          <p>Анализ проводится методом многоцветной проточной цитофлуориметрии. Оценивается интенсивность флуоресценции каждого маркера в популяции CD68⁺ клеток; вычисляется интегральный индекс амилоидогенности макрофагов (ИАМ).</p>
+        </div>
+      </div>
+
+      <div class="mstep fiu" style="transition-delay:.3s">
+        <div><div class="step-num">04</div></div>
+        <div class="step-body">
+          <h3>Стратификация риска</h3>
+          <p>На основе полученных данных алгоритм рассчитывает интегральный индекс риска амилоидоза. Пациенты стратифицируются на три группы: низкий, умеренный и высокий риск — с соответствующими персонализированными клиническими рекомендациями.</p>
+        </div>
+      </div>
+
+      <div class="mstep fiu" style="transition-delay:.4s">
+        <div><div class="step-num">05</div></div>
+        <div class="step-body">
+          <h3>Клиническое заключение и мониторинг</h3>
+          <p>Пациентам из группы высокого риска формируется индивидуальный план профилактического мониторинга и ранней фармакологической интервенции для предотвращения прогрессирования амилоидоза.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ RESULTS ══════════════════════════════════════════════════════════════ -->
+<section id="results">
+  <div class="inner">
+    <div class="results-head fiu">
+      <div class="label" style="justify-content:center">Клиническая значимость</div>
+      <h2>Преимущества панельной диагностики</h2>
+    </div>
+
+    <div class="rg">
+      <div class="rcard fiu" style="transition-delay:.0s">
+        <svg class="rcard-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M12 2L2 7l10 5 10-5-10-5M2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+        <h3>Ранняя диагностика</h3>
+        <p>Выявление амилоидогенных макрофагов на доклинической стадии позволяет начать терапию за 2–3 года до появления первых клинических симптомов амилоидоза, значительно улучшая прогноз пациентов.</p>
+      </div>
+
+      <div class="rcard fiu" style="transition-delay:.1s">
+        <svg class="rcard-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+        </svg>
+        <h3>Оперативность анализа</h3>
+        <p>Полный цикл диагностики от забора материала до клинического заключения занимает 4–6 часов. Это критически важно при работе с пациентами, требующими срочного принятия лечебных решений.</p>
+      </div>
+
+      <div class="rcard fiu" style="transition-delay:.2s">
+        <svg class="rcard-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <h3>Высокая точность</h3>
+        <p>Чувствительность метода составляет 94%, специфичность — 91%. Комбинированный панельный подход достоверно превосходит существующие одноцелевые методы иммунодиагностики амилоидоза.</p>
+      </div>
+
+      <div class="rcard fiu" style="transition-delay:.3s">
+        <svg class="rcard-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <h3>Персонализированный подход</h3>
+        <p>Фенотипический профиль макрофагов каждого пациента уникален. Панельный анализ позволяет подобрать таргетную терапию, направленную на конкретные молекулярные мишени пациента.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="foot-main">
+
+    <!-- Requisites -->
+    <div>
+      <div class="ft">Реквизиты</div>
+      <div class="fcname">ООО Научно-инновационная компания «ВКС-ПРОЕКТ»</div>
+      <div class="fdets">
+        <strong>ИНН</strong> 9200030111 · <strong>КПП</strong> 920001001<br>
+        <strong>ОГРН</strong> 1259200004601<br><br>
+        299011, г. Севастополь,<br>
+        ул. Большая Морская, дом 21,<br>
+        А/Я 115
+      </div>
+    </div>
+
+    <!-- Fund -->
+    <div>
+      <div class="ft">При поддержке</div>
+      <p class="ftxt">
+        Проект реализован при поддержке Фонда содействия инновациям в рамках программы
+        «Студенческий стартап» мероприятия «Платформа университетского технологического
+        предпринимательства» федерального проекта «Технологии».
+      </p>
+      <div class="flogos">
+        <div class="flogo">
+          <img src="head_logo_fasie.png" alt="Фонд содействия инновациям">
+        </div>
+        <div class="flogo">
+          <img src="platform_logo.png" alt="Платформа университетского технологического предпринимательства">
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacts -->
+    <div>
+      <div class="ft">Контакты</div>
+      <div class="fcon">
+        <div class="ci">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <a href="https://vcspro.ru" target="_blank">vcspro.ru</a>
+        </div>
+        <div class="ci">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <a href="mailto:vcspro@internet.ru">vcspro@internet.ru</a>
+        </div>
+        <div class="ci">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.59 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +7 (900) 008-09-56
+        </div>
+        <div class="ci">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.59 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +7 (900) 008-09-25
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot-bot">
+    <span>© 2026 ООО «ВКС-ПРОЕКТ» · Все права защищены</span>
+    <span>AmyloidDx Diagnostic Panel · v1.0</span>
+  </div>
+</footer>
+
+<script>
+// ── NAV SCROLL ──────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+}, {passive:true});
+
+// ── CANVAS BG ──────────────────────────────────────────
+(function(){
+  const cv = document.getElementById('bg-canvas');
+  const cx = cv.getContext('2d');
+  let W, H, pts = [];
+
+  function resize(){
+    W = cv.width = innerWidth;
+    H = cv.height = innerHeight;
+  }
+
+  class Pt {
+    constructor(){this.reset()}
+    reset(){
+      this.x = Math.random()*W;
+      this.y = Math.random()*H;
+      this.vx = (Math.random()-.5)*.28;
+      this.vy = (Math.random()-.5)*.28;
+      this.r = Math.random()*1.4+.4;
+      this.a = Math.random()*.7+.2;
+      this.ph = Math.random()*Math.PI*2;
+      this.isCell = Math.random()>.72;
+      this.cs = this.isCell ? Math.random()*18+9 : this.r;
+      this.ang = Math.random()*Math.PI*2;
+      this.dAng = (Math.random()-.5)*.004;
+    }
+    tick(){
+      this.x += this.vx; this.y += this.vy;
+      this.ang += this.dAng; this.ph += .018;
+      if(this.x<-60) this.x=W+60;
+      if(this.x>W+60) this.x=-60;
+      if(this.y<-60) this.y=H+60;
+      if(this.y>H+60) this.y=-60;
+    }
+    draw(){
+      const p = Math.sin(this.ph)*.28+.72;
+      if(this.isCell){
+        cx.save();
+        cx.translate(this.x,this.y);
+        cx.rotate(this.ang);
+        cx.beginPath();
+        cx.ellipse(0,0,this.cs*p,this.cs*.72*p,0,0,Math.PI*2);
+        cx.strokeStyle=`rgba(0,200,255,${this.a*.28})`;
+        cx.lineWidth=.7; cx.stroke();
+        cx.beginPath();
+        cx.arc(0,0,this.cs*.28*p,0,Math.PI*2);
+        cx.fillStyle=`rgba(123,97,255,${this.a*.12})`;
+        cx.fill();
+        cx.restore();
+      } else {
+        cx.beginPath();
+        cx.arc(this.x,this.y,this.r*p,0,Math.PI*2);
+        cx.fillStyle=`rgba(0,200,255,${this.a*p})`;
+        cx.fill();
+      }
+    }
+  }
+
+  function init(){
+    resize();
+    pts=[];
+    const n = Math.floor(W*H/13000);
+    for(let i=0;i<n;i++) pts.push(new Pt());
+  }
+
+  function frame(){
+    cx.clearRect(0,0,W,H);
+    // connections
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){
+          cx.beginPath();
+          cx.moveTo(pts[i].x,pts[i].y);
+          cx.lineTo(pts[j].x,pts[j].y);
+          cx.strokeStyle=`rgba(0,200,255,${(1-d/140)*.09})`;
+          cx.lineWidth=.5; cx.stroke();
+        }
+      }
+    }
+    pts.forEach(p=>{p.tick();p.draw()});
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize',init,{passive:true});
+  init(); frame();
+})();
+
+// ── INTERSECTION OBSERVER ──────────────────────────────
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting) return;
+    e.target.classList.add('on');
+    const bar = e.target.querySelector('.mcard-fill');
+    if(bar) setTimeout(()=>bar.classList.add('on'),350);
+    io.unobserve(e.target);
+  });
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+
+document.querySelectorAll('.fiu').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
