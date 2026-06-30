@@ -212,7 +212,7 @@ h1 em{color:var(--cyan);font-style:italic}
 .markers-head h2{margin:0 auto .8rem}
 .markers-head p{color:var(--t2);max-width:500px;margin:0 auto;font-size:.9rem}
 .markers-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
+  display:grid;grid-template-columns:repeat(4,1fr);
   gap:1.4rem;
 }
 .mcard{
@@ -486,12 +486,13 @@ footer{
 
     <p class="hero-sub">
       Комплексная диагностическая система для раннего выявления пациентов
-      с высоким риском развития амилоидоза на основе иммунофенотипирования клеток
+      с высоким риском развития амилоидоза на основе мультиплексного
+      иммуногистохимического исследования тканевых макрофагов
     </p>
 
     <div class="hero-stats">
       <div>
-        <div class="stat-val">5</div>
+        <div class="stat-val">4</div>
         <div class="stat-lbl">Диагностических маркеров</div>
       </div>
       <div class="stat-divider"></div>
@@ -553,18 +554,16 @@ footer{
         <!-- Marker labels orbiting -->
         <g filter="url(#glow)">
           <text x="52" y="138" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD68</text>
-          <text x="310" y="120" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">SAA1</text>
-          <text x="52" y="290" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD206</text>
-          <text x="155" y="375" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">IL-10</text>
-          <text x="200" y="42" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">TGF-β1</text>
+          <text x="295" y="120" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CTSB</text>
+          <text x="52" y="290" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CTSL</text>
+          <text x="135" y="375" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">MARCO</text>
         </g>
 
         <!-- Connecting lines from labels to cell -->
         <line x1="100" y1="133" x2="143" y2="155" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
-        <line x1="308" y1="118" x2="275" y2="148" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="293" y1="118" x2="275" y2="148" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
         <line x1="100" y1="283" x2="135" y2="265" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
-        <line x1="185" y1="368" x2="185" y2="340" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
-        <line x1="218" y1="48" x2="210" y2="62" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
+        <line x1="165" y1="368" x2="185" y2="340" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
 
         <!-- Scan line effect -->
         <rect x="50" y="0" width="300" height="400" fill="none">
@@ -652,38 +651,29 @@ footer{
 
       <div class="mcard fiu" style="transition-delay:.08s">
         <div class="mcard-idx">02</div>
-        <div class="mcard-tag">Острофазовый белок</div>
-        <div class="mcard-name">SAA1</div>
-        <div class="mcard-fname">Serum Amyloid A1</div>
-        <p class="mcard-desc">Предшественник белка амилоидных фибрилл типа АА. Накопление SAA1 в макрофагах является ключевым звеном патогенеза реактивного амилоидоза.</p>
-        <div class="mcard-bar"><div class="mcard-fill" data-w="90"></div></div>
+        <div class="mcard-tag">Лизосомальная протеаза</div>
+        <div class="mcard-name">Катепсин B</div>
+        <div class="mcard-fname">Cathepsin B (CTSB)</div>
+        <p class="mcard-desc">Цистеиновая протеаза эндолизосомального компартмента макрофага. Повышенная активность катепсина B ассоциирована с протеолитическим ремоделированием белковых агрегатов.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="88"></div></div>
       </div>
 
       <div class="mcard fiu" style="transition-delay:.12s">
         <div class="mcard-idx">03</div>
-        <div class="mcard-tag">Эндоцитарный рецептор</div>
-        <div class="mcard-name">CD206</div>
-        <div class="mcard-fname">Mannose Receptor 1 (MRC1)</div>
-        <p class="mcard-desc">Маннозный рецептор тканевых макрофагов, характерный для альтернативно активированного фенотипа. Определяет конкретный субтип амилоидогенных клеток с высокой точностью.</p>
-        <div class="mcard-bar"><div class="mcard-fill" data-w="75"></div></div>
+        <div class="mcard-tag">Лизосомальная протеаза</div>
+        <div class="mcard-name">Катепсин L</div>
+        <div class="mcard-fname">Cathepsin L (CTSL)</div>
+        <p class="mcard-desc">Цистеиновая протеаза, функционально сопряжённая с катепсином B. Совместный профиль их экспрессии отражает интенсивность внутриклеточной деградации белковых депозитов амилоидогенным макрофагом.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="80"></div></div>
       </div>
 
       <div class="mcard fiu" style="transition-delay:.20s">
         <div class="mcard-idx">04</div>
-        <div class="mcard-tag">Цитокин регуляции</div>
-        <div class="mcard-name">IL-10</div>
-        <div class="mcard-fname">Interleukin-10</div>
-        <p class="mcard-desc">Ключевой противовоспалительный цитокин. Сочетание высокого IL-10 с провоспалительными маркерами указывает на дисрегуляцию иммунного ответа.</p>
-        <div class="mcard-bar"><div class="mcard-fill" data-w="68"></div></div>
-      </div>
-
-      <div class="mcard fiu" style="transition-delay:.28s">
-        <div class="mcard-idx">05</div>
-        <div class="mcard-tag">Профиброзный фактор</div>
-        <div class="mcard-name">TGF-β1</div>
-        <div class="mcard-fname">Transforming Growth Factor Beta 1</div>
-        <p class="mcard-desc">Секретируется амилоидогенными макрофагами. Стимулирует отложение амилоида в периваскулярных зонах и является предиктором органного поражения.</p>
-        <div class="mcard-bar"><div class="mcard-fill" data-w="71"></div></div>
+        <div class="mcard-tag">Скавенджер-рецептор</div>
+        <div class="mcard-name">MARCO</div>
+        <div class="mcard-fname">Macrophage Receptor with Collagenous structure</div>
+        <p class="mcard-desc">Рецептор-«мусорщик» класса А, экспрессируемый специализированной субпопуляцией тканевых макрофагов. Аберрантная экспрессия MARCO указывает на изменённый профиль распознавания и клиренса белковых агрегатов.</p>
+        <div class="mcard-bar"><div class="mcard-fill" data-w="73"></div></div>
       </div>
     </div>
   </div>
@@ -704,23 +694,23 @@ footer{
         <div><div class="step-num">01</div></div>
         <div class="step-body">
           <h3>Забор биопсийного материала</h3>
-          <p>Исследование проводится на образцах слизистой оболочки прямой кишки, полученных методом эндоскопической биопсии. Образец фиксируется и подготавливается для последующего иммунофлуоресцентного анализа тканевых макрофагов.</p>
+          <p>Исследование проводится на образцах слизистой оболочки прямой кишки, полученных методом эндоскопической биопсии. Образец фиксируется и подготавливается для последующего мультиплексного иммуногистохимического анализа тканевых макрофагов.</p>
         </div>
       </div>
 
       <div class="mstep fiu" style="transition-delay:.1s">
         <div><div class="step-num">02</div></div>
         <div class="step-body">
-          <h3>Иммунофлуоресцентное окрашивание</h3>
-          <p>Срезы ткани окрашиваются панелью конъюгированных антител, специфичных к маркерам CD68, SAA1, CD206, IL-10 и TGF-β1. Используются флуорохромы с разными спектрами эмиссии для мультиплексного анализа без спектрального перекрёстного влияния.</p>
+          <h3>Мультиплексное иммуногистохимическое окрашивание</h3>
+          <p>Срезы ткани окрашиваются панелью антител, специфичных к маркерам CD68, катепсин B, катепсин L и MARCO. Мультиплексный протокол позволяет одновременно визуализировать несколько мишеней на одном срезе без перекрёстного влияния сигналов.</p>
         </div>
       </div>
 
       <div class="mstep fiu" style="transition-delay:.2s">
         <div><div class="step-num">03</div></div>
         <div class="step-body">
-          <h3>Флуоресцентная микроскопия и анализ изображений</h3>
-          <p>Окрашенные срезы исследуются методом многоканальной флуоресцентной микроскопии. Программный анализ изображений определяет долю CD68⁺ клеток с амилоидогенным фенотипом и вычисляет интегральный индекс амилоидогенности макрофагов (ИАМ).</p>
+          <h3>Микроскопия и анализ изображений</h3>
+          <p>Окрашенные срезы исследуются методом многоканальной микроскопии с детекцией сигнала иммуногистохимической реакции. Программный анализ изображений определяет долю CD68⁺ клеток с амилоидогенным фенотипом и вычисляет интегральный индекс амилоидогенности макрофагов (ИАМ).</p>
         </div>
       </div>
 
@@ -751,20 +741,20 @@ footer{
     <div class="gallery-head fiu">
       <div class="label" style="justify-content:center">Микроскопия</div>
       <h2>Визуализация амилоидогенных макрофагов</h2>
-      <p>Многоканальная иммунофлуоресцентная микроскопия образцов слизистой прямой кишки: зелёный канал — поверхностный маркер CD68, красный — внутриклеточные депозиты SAA1, синий — ядра клеток (DAPI)</p>
+      <p>Мультиплексное иммуногистохимическое исследование образцов слизистой прямой кишки: зелёный канал — CD68, красный — катепсины B/L, синий — ядра клеток (DAPI)</p>
     </div>
 
     <div class="gallery-grid">
       <figure class="gphoto fiu" style="transition-delay:.0s">
-        <img src="fluorescence-01.jpg" alt="Иммунофлуоресцентная микроскопия амилоидогенного макрофага, маркировка CD68/SAA1">
+        <img src="fluorescence-01.jpg" alt="Мультиплексное иммуногистохимическое исследование амилоидогенного макрофага, маркировка CD68/катепсины">
         <figcaption>
           <span class="gtag">Образец 01 · 2 мкм</span>
-          <span class="gdesc">Макрофаг с выраженной CD68⁺ мембранной экспрессией (зелёный) и внутриклеточными SAA1⁺ депозитами (красный)</span>
+          <span class="gdesc">Макрофаг с выраженной CD68⁺ мембранной экспрессией (зелёный) и внутриклеточными депозитами катепсинов (красный)</span>
         </figcaption>
       </figure>
 
       <figure class="gphoto fiu" style="transition-delay:.1s">
-        <img src="fluorescence-02.jpg" alt="Иммунофлуоресцентная микроскопия амилоидогенного макрофага в тканевом окружении">
+        <img src="fluorescence-02.jpg" alt="Мультиплексное иммуногистохимическое исследование амилоидогенного макрофага в тканевом окружении">
         <figcaption>
           <span class="gtag">Образец 02 · 5 мкм</span>
           <span class="gdesc">Амилоидогенный макрофаг в окружении тканевых клеток слизистой; визуализирована гетерогенность маркерной экспрессии</span>
@@ -772,10 +762,10 @@ footer{
       </figure>
 
       <figure class="gphoto fiu" style="transition-delay:.2s">
-        <img src="fluorescence-03.jpg" alt="Иммунофлуоресцентная микроскопия макрофага с диффузными SAA1 депозитами">
+        <img src="fluorescence-03.jpg" alt="Мультиплексное иммуногистохимическое исследование макрофага с диффузными депозитами катепсинов">
         <figcaption>
           <span class="gtag">Образец 03 · 5 мкм</span>
-          <span class="gdesc">CD68⁺ клетка на фоне диффузно распределённых SAA1⁺ гранул в окружающей ткани</span>
+          <span class="gdesc">CD68⁺ клетка на фоне диффузно распределённых гранул, иммунопозитивных по катепсину B, в окружающей ткани</span>
         </figcaption>
       </figure>
     </div>
@@ -869,20 +859,8 @@ footer{
       <div class="ft">Контакты</div>
       <div class="fcon">
         <div class="ci">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-          <a href="https://vcspro.ru" target="_blank">vcspro.ru</a>
-        </div>
-        <div class="ci">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          <a href="mailto:vcspro@internet.ru">vcspro@internet.ru</a>
-        </div>
-        <div class="ci">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.59 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          +7 (900) 008-09-56
-        </div>
-        <div class="ci">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.44 2 2 0 0 1 3.59 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.85a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          +7 (900) 008-09-25
+          <a href="mailto:fatum01@icloud.com">fatum01@icloud.com</a>
         </div>
       </div>
     </div>
