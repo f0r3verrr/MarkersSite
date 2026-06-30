@@ -152,6 +152,13 @@ h1 em{color:var(--cyan);font-style:italic}
   text-transform:uppercase;color:var(--t3);max-width:110px;
   margin-top:.3rem;line-height:1.4;
 }
+.stat-divider{width:1px;align-self:stretch;background:var(--border)}
+.stat-phrase{
+  font-family:'Cormorant',serif;font-style:italic;
+  font-size:1.25rem;font-weight:600;line-height:1.32;
+  color:var(--t1);max-width:200px;
+}
+.stat-phrase em{color:var(--cyan);font-style:italic}
 
 /* ─── HERO RIGHT — SVG CELL ─── */
 .hero-right{
@@ -307,6 +314,39 @@ h1 em{color:var(--cyan);font-style:italic}
   line-height:1.78;max-width:620px;
 }
 
+/* ─── GALLERY ─── */
+#gallery{padding:8rem 0}
+.gallery-head{text-align:center;margin-bottom:3.5rem}
+.gallery-head h2{margin:0 auto .8rem}
+.gallery-head p{color:var(--t2);max-width:560px;margin:0 auto;font-size:.9rem}
+.gallery-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.4rem;
+}
+.gphoto{
+  position:relative;border-radius:12px;overflow:hidden;
+  border:1px solid var(--border);
+  background:#000;
+  transition:border-color .35s,transform .35s;
+}
+.gphoto:hover{border-color:var(--border-c);transform:translateY(-5px)}
+.gphoto img{
+  width:100%;aspect-ratio:3/4;object-fit:cover;
+  display:block;filter:brightness(1.05) contrast(1.05);
+  transition:transform .6s ease;
+}
+.gphoto:hover img{transform:scale(1.06)}
+.gphoto figcaption{
+  padding:1.1rem 1.3rem 1.3rem;
+  background:linear-gradient(to bottom,var(--bg-card),var(--bg-card));
+}
+.gphoto .gtag{
+  font-size:.6rem;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:.4rem;
+  display:block;
+}
+.gphoto .gdesc{font-size:.78rem;color:var(--t2);line-height:1.6}
+
 /* ─── RESULTS ─── */
 #results{
   padding:8rem 0;
@@ -354,17 +394,17 @@ footer{
 }
 .foot-main{
   display:grid;grid-template-columns:1fr 1.4fr 1fr;
-  gap:3.5rem;max-width:1200px;margin:0 auto;
+  gap:3rem;max-width:1200px;margin:0 auto;
   padding-bottom:2.5rem;
   border-bottom:1px solid var(--border);
 }
 .ft{font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--t3);margin-bottom:1rem}
 .fcname{
   font-family:'Cormorant',serif;
-  font-size:1.05rem;font-weight:600;
-  line-height:1.35;margin-bottom:.9rem;
+  font-size:1.02rem;font-weight:600;
+  line-height:1.32;margin-bottom:.9rem;
 }
-.fdets{font-size:.78rem;color:var(--t2);line-height:1.85}
+.fdets{font-size:.76rem;color:var(--t2);line-height:1.8}
 .fdets strong{color:var(--t3);font-weight:500}
 .ftxt{font-size:.8rem;color:var(--t2);line-height:1.72;margin-bottom:1.6rem}
 .flogos{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
@@ -401,11 +441,13 @@ footer{
   .hero-right{display:none}
   .about-grid,.rg{grid-template-columns:1fr}
   .markers-grid{grid-template-columns:1fr 1fr}
+  .gallery-grid{grid-template-columns:1fr 1fr}
   .foot-main{grid-template-columns:1fr}
   .nav-links{display:none}
 }
 @media(max-width:600px){
   .markers-grid{grid-template-columns:1fr}
+  .gallery-grid{grid-template-columns:1fr}
   .hero-stats{gap:2rem}
 }
 </style>
@@ -449,17 +491,11 @@ footer{
 
     <div class="hero-stats">
       <div>
-        <div class="stat-val">6<sup>+</sup></div>
+        <div class="stat-val">5</div>
         <div class="stat-lbl">Диагностических маркеров</div>
       </div>
-      <div>
-        <div class="stat-val">94<sup>%</sup></div>
-        <div class="stat-lbl">Чувствительность метода</div>
-      </div>
-      <div>
-        <div class="stat-val">3<sup>×</sup></div>
-        <div class="stat-lbl">Раньше клинических симптомов</div>
-      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-phrase">Выявление <em>раньше</em> клинических проявлений</div>
     </div>
   </div>
 
@@ -518,7 +554,6 @@ footer{
         <g filter="url(#glow)">
           <text x="52" y="138" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD68</text>
           <text x="310" y="120" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">SAA1</text>
-          <text x="315" y="295" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD163</text>
           <text x="52" y="290" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".7">CD206</text>
           <text x="155" y="375" fill="#00c8ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">IL-10</text>
           <text x="200" y="42" fill="#7b61ff" font-size="11" font-family="'Sora',sans-serif" font-weight="600" opacity=".65">TGF-β1</text>
@@ -527,7 +562,6 @@ footer{
         <!-- Connecting lines from labels to cell -->
         <line x1="100" y1="133" x2="143" y2="155" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
         <line x1="308" y1="118" x2="275" y2="148" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
-        <line x1="313" y1="290" x2="283" y2="265" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
         <line x1="100" y1="283" x2="135" y2="265" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
         <line x1="185" y1="368" x2="185" y2="340" stroke="#00c8ff" stroke-width=".6" stroke-opacity=".2"/>
         <line x1="218" y1="48" x2="210" y2="62" stroke="#7b61ff" stroke-width=".6" stroke-opacity=".2"/>
@@ -568,8 +602,8 @@ footer{
         </p>
         <p>
           Разработанная нами панель маркеров позволяет с высокой точностью
-          идентифицировать амилоидогенные макрофаги в образцах периферической крови,
-          формируя основу для своевременного превентивного вмешательства.
+          идентифицировать амилоидогенные макрофаги в образцах слизистой оболочки
+          прямой кишки, формируя основу для своевременного превентивного вмешательства.
         </p>
       </div>
 
@@ -625,26 +659,17 @@ footer{
         <div class="mcard-bar"><div class="mcard-fill" data-w="90"></div></div>
       </div>
 
-      <div class="mcard fiu" style="transition-delay:.16s">
-        <div class="mcard-idx">03</div>
-        <div class="mcard-tag">Рецептор M2 фенотипа</div>
-        <div class="mcard-name">CD163</div>
-        <div class="mcard-fname">Scavenger receptor cysteine-rich</div>
-        <p class="mcard-desc">Маркер альтернативно активированных макрофагов. Гиперэкспрессия CD163 указывает на иммуносупрессивное микроокружение, благоприятствующее амилоидогенезу.</p>
-        <div class="mcard-bar"><div class="mcard-fill" data-w="82"></div></div>
-      </div>
-
       <div class="mcard fiu" style="transition-delay:.12s">
-        <div class="mcard-idx">04</div>
+        <div class="mcard-idx">03</div>
         <div class="mcard-tag">Эндоцитарный рецептор</div>
         <div class="mcard-name">CD206</div>
         <div class="mcard-fname">Mannose Receptor 1 (MRC1)</div>
-        <p class="mcard-desc">Маннозный рецептор тканевых макрофагов. В сочетании с CD163 определяет конкретный субтип амилоидогенных клеток с высокой точностью.</p>
+        <p class="mcard-desc">Маннозный рецептор тканевых макрофагов, характерный для альтернативно активированного фенотипа. Определяет конкретный субтип амилоидогенных клеток с высокой точностью.</p>
         <div class="mcard-bar"><div class="mcard-fill" data-w="75"></div></div>
       </div>
 
       <div class="mcard fiu" style="transition-delay:.20s">
-        <div class="mcard-idx">05</div>
+        <div class="mcard-idx">04</div>
         <div class="mcard-tag">Цитокин регуляции</div>
         <div class="mcard-name">IL-10</div>
         <div class="mcard-fname">Interleukin-10</div>
@@ -653,7 +678,7 @@ footer{
       </div>
 
       <div class="mcard fiu" style="transition-delay:.28s">
-        <div class="mcard-idx">06</div>
+        <div class="mcard-idx">05</div>
         <div class="mcard-tag">Профиброзный фактор</div>
         <div class="mcard-name">TGF-β1</div>
         <div class="mcard-fname">Transforming Growth Factor Beta 1</div>
@@ -678,8 +703,8 @@ footer{
       <div class="mstep fiu" style="transition-delay:.0s">
         <div><div class="step-num">01</div></div>
         <div class="step-body">
-          <h3>Забор биологического материала</h3>
-          <p>Исследование проводится на образцах периферической крови пациента. Выделение мононуклеарных клеток (МКПК) методом градиентного центрифугирования позволяет обогатить фракцию макрофагов и моноцитов для последующего анализа.</p>
+          <h3>Забор биопсийного материала</h3>
+          <p>Исследование проводится на образцах слизистой оболочки прямой кишки, полученных методом эндоскопической биопсии. Образец фиксируется и подготавливается для последующего иммунофлуоресцентного анализа тканевых макрофагов.</p>
         </div>
       </div>
 
@@ -687,15 +712,15 @@ footer{
         <div><div class="step-num">02</div></div>
         <div class="step-body">
           <h3>Иммунофлуоресцентное окрашивание</h3>
-          <p>Клетки окрашиваются панелью конъюгированных антител, специфичных к маркерам CD68, SAA1, CD163, CD206, IL-10 и TGF-β1. Используются флуорохромы с разными спектрами эмиссии для мультиплексного анализа без спектрального перекрёстного влияния.</p>
+          <p>Срезы ткани окрашиваются панелью конъюгированных антител, специфичных к маркерам CD68, SAA1, CD206, IL-10 и TGF-β1. Используются флуорохромы с разными спектрами эмиссии для мультиплексного анализа без спектрального перекрёстного влияния.</p>
         </div>
       </div>
 
       <div class="mstep fiu" style="transition-delay:.2s">
         <div><div class="step-num">03</div></div>
         <div class="step-body">
-          <h3>Многоцветная проточная цитофлуориметрия</h3>
-          <p>Анализ проводится методом многоцветной проточной цитофлуориметрии. Оценивается интенсивность флуоресценции каждого маркера в популяции CD68⁺ клеток; вычисляется интегральный индекс амилоидогенности макрофагов (ИАМ).</p>
+          <h3>Флуоресцентная микроскопия и анализ изображений</h3>
+          <p>Окрашенные срезы исследуются методом многоканальной флуоресцентной микроскопии. Программный анализ изображений определяет долю CD68⁺ клеток с амилоидогенным фенотипом и вычисляет интегральный индекс амилоидогенности макрофагов (ИАМ).</p>
         </div>
       </div>
 
@@ -714,6 +739,45 @@ footer{
           <p>Пациентам из группы высокого риска формируется индивидуальный план профилактического мониторинга и ранней фармакологической интервенции для предотвращения прогрессирования амилоидоза.</p>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ══ GALLERY ══════════════════════════════════════════════════════════════ -->
+<section id="gallery">
+  <div class="inner">
+    <div class="gallery-head fiu">
+      <div class="label" style="justify-content:center">Микроскопия</div>
+      <h2>Визуализация амилоидогенных макрофагов</h2>
+      <p>Многоканальная иммунофлуоресцентная микроскопия образцов слизистой прямой кишки: зелёный канал — поверхностный маркер CD68, красный — внутриклеточные депозиты SAA1, синий — ядра клеток (DAPI)</p>
+    </div>
+
+    <div class="gallery-grid">
+      <figure class="gphoto fiu" style="transition-delay:.0s">
+        <img src="fluorescence-01.jpg" alt="Иммунофлуоресцентная микроскопия амилоидогенного макрофага, маркировка CD68/SAA1">
+        <figcaption>
+          <span class="gtag">Образец 01 · 2 мкм</span>
+          <span class="gdesc">Макрофаг с выраженной CD68⁺ мембранной экспрессией (зелёный) и внутриклеточными SAA1⁺ депозитами (красный)</span>
+        </figcaption>
+      </figure>
+
+      <figure class="gphoto fiu" style="transition-delay:.1s">
+        <img src="fluorescence-02.jpg" alt="Иммунофлуоресцентная микроскопия амилоидогенного макрофага в тканевом окружении">
+        <figcaption>
+          <span class="gtag">Образец 02 · 5 мкм</span>
+          <span class="gdesc">Амилоидогенный макрофаг в окружении тканевых клеток слизистой; визуализирована гетерогенность маркерной экспрессии</span>
+        </figcaption>
+      </figure>
+
+      <figure class="gphoto fiu" style="transition-delay:.2s">
+        <img src="fluorescence-03.jpg" alt="Иммунофлуоресцентная микроскопия макрофага с диффузными SAA1 депозитами">
+        <figcaption>
+          <span class="gtag">Образец 03 · 5 мкм</span>
+          <span class="gdesc">CD68⁺ клетка на фоне диффузно распределённых SAA1⁺ гранул в окружающей ткани</span>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -750,7 +814,7 @@ footer{
           <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
         </svg>
         <h3>Высокая точность</h3>
-        <p>Чувствительность метода составляет 94%, специфичность — 91%. Комбинированный панельный подход достоверно превосходит существующие одноцелевые методы иммунодиагностики амилоидоза.</p>
+        <p>Комбинированный панельный подход к иммунофенотипированию достоверно превосходит существующие одноцелевые методы диагностики амилоидоза за счёт совокупного анализа независимых маркеров.</p>
       </div>
 
       <div class="rcard fiu" style="transition-delay:.3s">
@@ -772,13 +836,13 @@ footer{
     <!-- Requisites -->
     <div>
       <div class="ft">Реквизиты</div>
-      <div class="fcname">ООО Научно-инновационная компания «ВКС-ПРОЕКТ»</div>
+      <div class="fcname">ООО «Морфологические и цитологические особенности маркёров амилоидобластов»</div>
       <div class="fdets">
-        <strong>ИНН</strong> 9200030111 · <strong>КПП</strong> 920001001<br>
-        <strong>ОГРН</strong> 1259200004601<br><br>
-        299011, г. Севастополь,<br>
-        ул. Большая Морская, дом 21,<br>
-        А/Я 115
+        <strong>ИНН</strong> 9729411291 · <strong>КПП</strong> 772901001<br>
+        <strong>ОГРН</strong> 1257700508230<br><br>
+        119234, г. Москва, вн.тер.г. муниципальный<br>
+        округ Раменки, тер. Ленинские горы,<br>
+        д. 1, стр. 77
       </div>
     </div>
 
@@ -826,7 +890,7 @@ footer{
   </div>
 
   <div class="foot-bot">
-    <span>© 2026 ООО «ВКС-ПРОЕКТ» · Все права защищены</span>
+    <span>© 2026 Все права защищены</span>
     <span>AmyloidDx Diagnostic Panel · v1.0</span>
   </div>
 </footer>
